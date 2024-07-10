@@ -18,9 +18,9 @@ for i = 1:n
     T(:,i) = normalization(T(:,i),Nt);
 end
 e = normalization(e,N);
-e_test = normalization(e_test,Nt);
+e_test = normalization(e_test,Nt)
 
 %% Numerical optimization methods
 
 % Gradient Method 
-[X_calculat, x_calculat, iteratii] = GradientMethod(A, e, X, x);
+

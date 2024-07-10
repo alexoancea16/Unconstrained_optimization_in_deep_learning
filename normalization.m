@@ -15,5 +15,6 @@ for i = 1:N
     end
     if x(i) > 1
         x(i) = 0.9;
+    end
 end
 end
