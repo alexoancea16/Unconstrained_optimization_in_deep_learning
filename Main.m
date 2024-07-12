@@ -25,10 +25,11 @@ e_test = normalization(e_test,Nt);
 
 % Gradient Method 
 [X_GM, x_GM, iteration_GM, X_evolution_GM, x_evolution_GM, time_GM] = GradientMethod(A, e, X, x);
+Y = g(T*X_GM)*x_GM;
 
 %% Comparison of results for the use of optimization methods
 
-% Gradient Method
+% Gradient Method - Diagrames
 figGM_x = semilogy(1:iteration_GM-1,x_evolution_GM(1:iteration_GM-1,1));
 figGM_x.LineWidth = 1;
 figGM_x.Color = 'r';
@@ -52,3 +53,28 @@ title('Gradient Method - The evolution of the time according to the iterations',
 xlabel("Time evolution");
 ylabel("The gradient norm in X");
 grid on;
+
+% Gradient Method - results
+% Mean squared error
+MSE = (1/Nt)*(norm(Y - e_test))^2;
+disp("Mean squared error: ");
+disp(MSE);
+% Mean absolute error
+MAE = 0;
+for i = 1:Nt
+    MAE = MAE + abs(e_test(i) - Y(i));
+end
+MAE = (1/Nt)*MAE;
+disp("Mean absolute error: ");
+disp(MAE);
+% Score
+R = 1;
+R1 = 0;
+R2 = 0;
+for i = 1:Nt
+    R1 = R1 + (e_test(i) - Y(i))^2;
+    R2 = R2 + (e_test(i) - mean(e_test))^2;
+end
+R = R - R1/R2;
+disp("Network score: ");
+disp(R);
