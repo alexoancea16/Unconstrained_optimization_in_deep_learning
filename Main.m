@@ -26,6 +26,9 @@ e_test = normalization(e_test,Nt);
 % Gradient Method 
 [X_GM, x_GM, iteration_GM, X_evolution_GM, x_evolution_GM, time_GM] = GradientMethod(A, e, X, x);
 Y = g(T*X_GM)*x_GM;
+% Stochastic Gradient Method
+[X_SG, x_SG, iteration_SG, X_evolution_SG, x_evolution_SG, time_SG] = StochasticGradientMethod(A, e, X, x)
+Z = g(T*X_SG)*x_SG;
 
 %% Comparison of results for the use of optimization methods
 
@@ -57,7 +60,7 @@ grid on;
 % Gradient Method - results
 % Mean squared error
 MSE = (1/Nt)*(norm(Y - e_test))^2;
-disp("Mean squared error: ");
+disp("GM Mean squared error: ");
 disp(MSE);
 % Mean absolute error
 MAE = 0;
@@ -65,7 +68,7 @@ for i = 1:Nt
     MAE = MAE + abs(e_test(i) - Y(i));
 end
 MAE = (1/Nt)*MAE;
-disp("Mean absolute error: ");
+disp("GM Mean absolute error: ");
 disp(MAE);
 % Score
 R = 1;
@@ -76,5 +79,55 @@ for i = 1:Nt
     R2 = R2 + (e_test(i) - mean(e_test))^2;
 end
 R = R - R1/R2;
-disp("Network score: ");
+disp("GM Network score: ");
+disp(R);
+
+% Stochastic Gradient Method - Diagrames
+figSG_x = semilogy(1:iteration_SG-1,x_evolution_SG(1:iteration_SG-1,1));
+figSG_x.LineWidth = 1;
+figSG_x.Color = 'r';
+title('Stochastic Gradient Method - The evolution of the x-dependent criterion according to the iterations', 'FontSize', 8, 'FontWeight', 'bold');
+xlabel("Number of iterations");
+ylabel("The gradient norm in x");
+grid on;
+figure();
+figSG_X = semilogy(1:iteration_SG-1,X_evolution_SG(1:iteration_SG-1,1));
+figSG_X.LineWidth = 1;
+figSG_X.Color = 'b';
+title('Stochastic Gradient Method - The evolution of the X-dependent criterion according to the iterations', 'FontSize', 8, 'FontWeight', 'bold');
+xlabel("Number of iterations");
+ylabel("The gradient norm in X");
+grid on;
+figure();
+figSG_t = semilogy(1:iteration_SG-1,time_SG(1:iteration_SG-1,1));
+figSG_t.LineWidth = 1;
+figSG_t.Color = 'g';
+title('Stochastic Gradient Method - The evolution of the time according to the iterations', 'FontSize', 8, 'FontWeight', 'bold');
+xlabel("Time evolution");
+ylabel("The gradient norm in X");
+grid on;
+
+% Stochastic Gradient Method - results
+% Mean squared error
+MSE = (1/Nt)*(norm(Z - e_test))^2;
+disp("SG Mean squared error: ");
+disp(MSE);
+% Mean absolute error
+MAE = 0;
+for i = 1:Nt
+    MAE = MAE + abs(e_test(i) - Z(i));
+end
+MAE = (1/Nt)*MAE;
+disp("SG Mean absolute error: ");
+disp(MAE);
+% Score
+R = 1;
+R1 = 0;
+R2 = 0;
+for i = 1:Nt
+    R1 = R1 + (e_test(i) - Z(i))^2;
+    R2 = R2 + (e_test(i) - mean(e_test))^2;
+end
+R = R - R1/R2;
+disp("SG Network score: ");
 disp(R);
