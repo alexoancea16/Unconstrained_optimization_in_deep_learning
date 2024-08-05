@@ -12,7 +12,9 @@ A(1:160,12) = 1;      % Training matrix
 T(1:40,12) = 1;       % Test matrix
 X = rand(m,m);        % Network parameters
 x = rand(m,1);
-
+alpha = 0.001;
+eps = 0.0001;
+maxIter = 10000;
 %% Data normalization
 for i = 1:n
     A(:,i) = normalization(A(:,i),N);
@@ -24,15 +26,16 @@ e_test = normalization(e_test,Nt);
 %% Numerical optimization methods
 
 % Gradient Method 
-[X_GM, x_GM, iteration_GM, X_evolution_GM, x_evolution_GM, time_GM] = GradientMethod(A, e, X, x);
+[X_GM, x_GM, iteration_GM, X_evolution_GM, x_evolution_GM, time_GM] = GradientMethod(A, e, X, x, eps, alpha, maxIter);
 Y = g(T*X_GM)*x_GM;
 % Stochastic Gradient Method
-[X_SG, x_SG, iteration_SG, X_evolution_SG, x_evolution_SG, time_SG] = StochasticGradientMethod(A, e, X, x)
+[X_SG, x_SG, iteration_SG, X_evolution_SG, x_evolution_SG, time_SG] = StochasticGradientMethod(A, e, X, x, eps, alpha, maxIter);
 Z = g(T*X_SG)*x_SG;
 
 %% Comparison of results for the use of optimization methods
 
 % Gradient Method - Diagrames
+figure();
 figGM_x = semilogy(1:iteration_GM-1,x_evolution_GM(1:iteration_GM-1,1));
 figGM_x.LineWidth = 1;
 figGM_x.Color = 'r';
@@ -83,6 +86,7 @@ disp("GM Network score: ");
 disp(R);
 
 % Stochastic Gradient Method - Diagrames
+figure();
 figSG_x = semilogy(1:iteration_SG-1,x_evolution_SG(1:iteration_SG-1,1));
 figSG_x.LineWidth = 1;
 figSG_x.Color = 'r';

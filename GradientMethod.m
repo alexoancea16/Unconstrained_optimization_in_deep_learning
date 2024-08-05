@@ -1,13 +1,10 @@
 % Gradient Method 
-function [X, x, k, X_evolution, x_evolution, time] = GradientMethod(A, e, X, x)
+function [X, x, k, X_evolution, x_evolution, time] = GradientMethod(A, e, X, x, eps, alpha, k_max)
 
 k = 0;
-k_max = 10000;
 X_evolution = zeros(k_max, 1);  
 x_evolution = zeros(k_max, 1);
 time = zeros(k_max, 1);
-alpha = 0.001;
-eps = 0.0001;
 N = size(A, 1);
 M = g(A*X)*x;    % Predictions
 err = M - e;
